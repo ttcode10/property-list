@@ -1,28 +1,19 @@
-  
-name: Github Pages
-
+name: GitHub Actions Build and Deploy Demo
 on:
   push:
-    branches: [main]
-
+    branches:
+      - main
 jobs:
-  ci:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@master
 
-  publish:
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - run: yarn
-      - run: yarn build
-      - uses: JamesIves/github-pages-deploy-action@3.6.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: build
+    - name: Build and Deploy
+      uses: JamesIves/github-pages-deploy-action@master
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: build
+        BUILD_SCRIPT: yarn && yarn build
